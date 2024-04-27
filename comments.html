@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Comments</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #container {
+      text-align: center;
+    }
+
+    #commentsContainer {
+      margin-top: 20px;
+      border: 1px solid #2c2c2c;
+      border-radius: 5px;
+      padding: 15px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow-y: hidden;
+
+    }
+
+    .comment {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1 id="titleHeader"></h1>
+    <h2>Add a Comment</h2>
+    <form id="commentForm">
+      <input type="hidden" id="topicID" name="topicID" value="">
+      <textarea id="commentContent" name="commentContent" rows="4" cols="50" placeholder="Enter your comment here" required></textarea><br>
+      <br><button type="submit">Post Comment</button>
+    </form>
+    <center>
+      <div id="commentsContainer">
+        <table><td></td></table>
+      </div>
+      <br><a href="/Welcome.html">Back to Welcome Page</a>
+    </center>
+  </div>
+
+  <script>
+    // Gets the title from the URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const title = urlParams.get('title');
+
+    // Sets the title in the header
+    document.getElementById('titleHeader').textContent = 'Title: ' + title;
+
+    // Sets the topicID in the hidden input field
+    document.getElementById('topicID').value = title;
+
+    // Function to fetch and display comments
+    async function fetchAndDisplayComments() {
+      try {
+        const response = await fetch(`/comments?topicID=${encodeURIComponent(title)}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch comments');
+        }
+        const comments = await response.text();
+        document.getElementById('commentsContainer').innerHTML = comments;
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    }
+
+    // Initials fetch and display of comments
+    fetchAndDisplayComments();
+
+    // Handles form submission
+    document.getElementById('commentForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const formData = new FormData(this); // Get form data
+      const commentData = Object.fromEntries(formData.entries()); // Convert FormData to object
+
+      // Adds current date and time to commentData
+      commentData.dateTime = new Date().toISOString();
+
+      // Sends a POST request to the server to save the comment
+      fetch('/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(commentData)
+      })
+      .then(response => {
+        if (response.ok) {
+          fetchAndDisplayComments();
+          console.log('Comment posted successfully');
+        } else {
+          // Error posting comment
+          console.error('Error posting comment');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>
