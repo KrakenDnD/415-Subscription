@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Welcome</title>
+  <style>
+    #topicsContainer, #commentsContainer, #subscribedTopicsContainer {
+      margin-top: 10px;
+    }
+    .topicItem, .commentItem {
+      padding: 5px;
+      border: 1px solid #2c2c2c;
+      border-radius: 3px;
+      margin-bottom: 2px;
+      width: 200px;
+      word-wrap: break-word;
+    }
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #000;
+      margin: 0;
+      width: 20%;
+    }
+    .buttonContainer {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+<script>
+  function showTopics() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/topics", true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var topics = JSON.parse(xhr.responseText);
+        var topicsContainer = document.createElement("div");
+        topicsContainer.id = "topicsContainer";
+
+        topics.forEach(function(topic) {
+          var topicElement = document.createElement("div");
+          topicElement.classList.add("topicItem");
+
+          // Creates a link for each topic title
+          var link = document.createElement("a");
+          var commentsUrl = "/comments.html?title=" + encodeURIComponent(topic.title);
+          link.href = commentsUrl;
+          link.textContent = topic.title;
+          link.style.display = "block";
+          link.style.fontWeight = "bold";
+          link.style.marginBottom = "5px";
+          topicElement.appendChild(link);
+
+          // Adds createdBy information
+          var createdByElement = document.createElement("div");
+          createdByElement.innerHTML = "<b>Created By:</b> " + topic.createdBy;
+          topicElement.appendChild(createdByElement);
+
+          // Creates a container for buttons
+          var buttonContainer = document.createElement("div");
+          buttonContainer.classList.add("buttonContainer");
+
+          // Adds a button to subscribe to the topic
+          var subscribeButton = document.createElement("button");
+          subscribeButton.textContent = "Subscribe";
+          subscribeButton.onclick = function() {
+            subscribeToTopic(topic._id);
+          };
+          buttonContainer.appendChild(subscribeButton);
+
+          topicElement.appendChild(buttonContainer);
+
+          topicsContainer.appendChild(topicElement);
+        });
+
+        var button = document.getElementById("showTopicsButton");
+        // Removes existing topics before appending new ones
+        var existingContainer = button.nextSibling;
+        if (existingContainer && existingContainer.id === "topicsContainer") {
+          existingContainer.parentNode.removeChild(existingContainer);
+        }
+        // Appends the topics container
+        button.parentNode.insertBefore(topicsContainer, button.nextSibling);
+      }
+    };
+    xhr.send();
+  }
+
+  // Function to subscribe to a topic
+  function subscribeToTopic(topicID) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/subscribe", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          alert("Subscribed to the topic successfully!");
+        } else {
+          alert("Failed to subscribe to the topic because you are either subscribed or you can't subscribe!");
+        }
+      }
+    };
+    xhr.send(JSON.stringify({ topicID: topicID }));
+  }
+
+  // Function to unsubscribe from a topic
+  function unsubscribeFromTopic(topicID) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/unsubscribe", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          alert("Unsubscribed from the topic successfully!");
+        } else {
+          alert("Failed to unsubscribe from the topic because you are either already unsubscribed or you can't usubscribe!");
+        }
+      }
+    };
+    xhr.send(JSON.stringify({ topicID: topicID }));
+  }
+
+  // Function to fetch and display the two most recent comments
+  function showRecentComments() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/recentcomments", true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var comments = JSON.parse(xhr.responseText);
+        var commentsContainer = document.createElement("div");
+        commentsContainer.id = "commentsContainer";
+
+        comments.forEach(function(comment) {
+          var commentElement = document.createElement("div");
+          commentElement.classList.add("commentItem");
+
+          // Creates elements to display the comment details
+          var dateElement = document.createElement("div");
+          dateElement.innerHTML = "<b>Date:</b> " + new Date(comment.dateTime).toLocaleString();
+          var userElement = document.createElement("div");
+          userElement.innerHTML = "<b>User:</b> " + comment.userID;
+          var contentElement = document.createElement("div");
+          contentElement.innerHTML = "<b>Comment:</b> " + comment.commentContent;
+
+          // Appends comment details to the comment element
+          commentElement.appendChild(dateElement);
+          commentElement.appendChild(userElement);
+          commentElement.appendChild(contentElement);
+
+          // Appends the comment element to the comments container
+          commentsContainer.appendChild(commentElement);
+        });
+
+        // Removes existing comments container
+        var existingContainer = document.getElementById("commentsContainer");
+        if (existingContainer) {
+          existingContainer.parentNode.removeChild(existingContainer);
+        }
+
+        // Displays the new comments container
+        var button = document.getElementById("showCommentsButton");
+        button.parentNode.insertBefore(commentsContainer, button.nextSibling);
+      }
+    };
+    xhr.send();
+  }
+
+// Function to show subscribed topics
+function showSubscribedTopics() {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/subscribedtopics", true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var subscribedTopics = JSON.parse(xhr.responseText);
+      var subscribedTopicsContainer = document.createElement("div");
+      subscribedTopicsContainer.id = "subscribedTopicsContainer";
+
+      subscribedTopics.forEach(function(topic) {
+        var topicElement = document.createElement("div");
+        topicElement.classList.add("topicItem");
+
+        // Creates a link for each topic title
+        var link = document.createElement("a");
+        var commentsUrl = "/comments.html?title=" + encodeURIComponent(topic.title);
+        link.href = commentsUrl;
+        link.textContent = topic.title;
+        link.style.display = "block";
+        link.style.fontWeight = "bold";
+        link.style.marginBottom = "5px";
+        topicElement.appendChild(link);
+
+        // Adds createdBy information
+        var createdByElement = document.createElement("div");
+        createdByElement.innerHTML = "<b>Created By:</b> " + topic.createdBy;
+        topicElement.appendChild(createdByElement);
+
+        // Creates a container for buttons
+        var buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("buttonContainer");
+
+        // Adds a button to unsubscribe from the topic
+        var unsubscribeButton = document.createElement("button");
+        unsubscribeButton.textContent = "Unsubscribe";
+        unsubscribeButton.onclick = function() {
+          unsubscribeFromTopic(topic._id);
+        };
+        buttonContainer.appendChild(unsubscribeButton);
+
+        topicElement.appendChild(buttonContainer);
+
+        subscribedTopicsContainer.appendChild(topicElement);
+      });
+
+      var button = document.getElementById("showSubscribedTopicsButton");
+      // Removes existing subscribed topics before appending new ones
+      var existingContainer = button.nextSibling;
+      if (existingContainer && existingContainer.id === "subscribedTopicsContainer") {
+        existingContainer.parentNode.removeChild(existingContainer);
+      }
+      // Appends the subscribed topics container
+      button.parentNode.insertBefore(subscribedTopicsContainer, button.nextSibling);
+    }
+  };
+  xhr.send();
+}
+
+// Calls showRecentComments() function when the page loads
+window.onload = function() {
+  showRecentComments();
+};
+</script>
+</head>
+<body>
+  <center>
+    <h1>Welcome!</h1>
+    <h3>Your 5 Minute Cookie has been created! You can now create a topic!</h3>
+    <hr>
+    <br><a href="/reportcookies">Report Cookies</a><br><br>
+    <a href="/clearcookies">Clear Cookies</a><br><br>
+    <hr>
+    <h2>Create New Topic</h2>
+    <form action="/topics" method="POST">
+      <input type="text" name="title" placeholder="Enter topic title" required>
+      <button type="submit">Create Topic</button>
+    </form>
+    <br>
+    <button id="showSubscribedTopicsButton" onclick="showSubscribedTopics()">Show Subscribed Topics</button><br><br>
+    <button id="showTopicsButton" onclick="showTopics()">Show Topics Available for Subscription</button><br><br>
+    <h4 id="showCommentsButton" onclick="showRecentComments()">Showing Recent Comments</h4><br>
+    <br><hr>
+    <br><a href="/LoginOrRegister.html">Sign Out</a>
+  </center>
+</body>
