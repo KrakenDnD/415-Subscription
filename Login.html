@@ -53,14 +53,31 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to our Message Center</h1>
-    <form action="/login" method="post">
-      <input type="text" name="username" placeholder="Username" required>
-      <input type="password" name="password" placeholder="Password" required>
-      <input type="submit" value="Login">
-    </form>
-    <p>Don't have an account? <a href="register.html">Register here</a>.</p>
-  </div>
+  <div class="center">
+    <div class="container">
+        <label for="show" class="close-btn fas fa-times" title="close"></label>
+        <div class="text">
+        </div>
+        <form action="/login" method="POST">
+            <div class="data">
+                <label>Username</label>
+                <input type="text" name="userID" required>
+            </div>
+            <div class="data">
+                <label>Password</label>
+                <input type="password" name="userPASS" required>
+            </div>
+            <div class="btn">
+                <div class="inner"></div>
+                <button type="submit">Login</button>
+            </div>
+            <center>
+                <div>
+                    <a href="/LoginOrRegister.html">Back to menu</a>
+                </div>
+            </center>
+        </form>
+    </div>
+</div>
 </body>
 </html>

@@ -40,7 +40,7 @@
   </style>
 
 <script>
-  function showTopics() {
+   function showTopics() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "/topics", true);
     xhr.onreadystatechange = function() {
@@ -114,24 +114,24 @@
     };
     xhr.send(JSON.stringify({ topicID: topicID }));
   }
-  // Function to unsubscribe to a topic
-  function unsubscribeToTopic(topicID) {
+
+  // Function to unsubscribe from a topic
+  function unsubscribeFromTopic(topicID) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/unsubscribe", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          alert("You are no longer subscibed to this topic!");
+          alert("Unsubscribed from the topic successfully!");
         } else {
-          alert("Failed to unsubscribe to the topic because you are not subscribed to the topic!");
+          alert("Failed to unsubscribe from the topic because you are either already unsubscribed or you can't usubscribe!");
         }
       }
     };
     xhr.send(JSON.stringify({ topicID: topicID }));
   }
 
-  
   // Function to fetch and display the two most recent comments
   function showRecentComments() {
     var xhr = new XMLHttpRequest();
@@ -205,6 +205,22 @@ function showSubscribedTopics() {
         var createdByElement = document.createElement("div");
         createdByElement.innerHTML = "<b>Created By:</b> " + topic.createdBy;
         topicElement.appendChild(createdByElement);
+
+        // Creates a container for buttons
+        var buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("buttonContainer");
+
+        // Adds a button to unsubscribe from the topic
+        var unsubscribeButton = document.createElement("button");
+        unsubscribeButton.textContent = "Unsubscribe";
+        unsubscribeButton.onclick = function() {
+          unsubscribeFromTopic(topic._id);
+        };
+        buttonContainer.appendChild(unsubscribeButton);
+
+        topicElement.appendChild(buttonContainer);
+
+        subscribedTopicsContainer.appendChild(topicElement);
       });
 
       var button = document.getElementById("showSubscribedTopicsButton");
