@@ -8,7 +8,23 @@ const Database = require('./dataContext');
 const app = express();
 const port = 3000;
 
-const database = new Database(); //This is for the singleton pattern implementation
+// MongoDB connection
+const uri = 'mongodb+srv://User:golions!@cluster0.z11f996.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const client = new MongoClient(uri);
+
+// Initialize the Database instance
+const database = new Database(uri);
+// Connect to MongoDB
+async function connectToDatabase() {
+  try {
+    await database.connect();
+    console.log("Connected to the database");
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+    process.exit(1); // Exit the process if unable to connect to the database
+  }
+}
+connectToDatabase();
 
 app.listen(port);
 console.log('Server started at http://localhost:' + port);
@@ -34,6 +50,10 @@ app.get('/', async function(req, res) {
     console.error("Error:", error);
     res.status(500).send('Internal Server Error');
   }
+});
+// Error handling for database operations
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 
@@ -68,7 +88,7 @@ app.post('/register', async function(req, res) {
   try {
     const { userID, password } = req.body;
     await database.connect();
-    const collection = database.getCollection('MyDBExample', 'UserInformation');
+    const collection = database.getCollection('Project415', 'User');
     await collection.insertOne({ userID, password });
     console.log("User registered:", userID);
     res.redirect('/Login.html');
@@ -85,7 +105,7 @@ app.post('/login', async function(req, res) {
   try {
     const { userID, password } = req.body;
     await database.connect();
-    const collection = database.getCollection('MyDBExample', 'UserInformation');
+    const collection = database.getCollection('Project415', 'User');
     const user = await collection.findOne({ userID, password });
     req.session.userID = userID;
     if (user) {
