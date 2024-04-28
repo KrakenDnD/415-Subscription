@@ -1,4 +1,4 @@
- { MongoClient } = require("mongodb");
+const { MongoClient } = require("mongodb");
 
 // MongoDB connection URI
 const uri = 'mongodb+srv://User:golionconsts!@cluster0.z11f996.mongodb.net/MyDBExample?retryWrites=true&w=majority';
