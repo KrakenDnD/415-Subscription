@@ -66,10 +66,10 @@ app.get('/Welcome.html', function(req, res) {
 // Route to handle registration:
 app.post('/register', async function(req, res) {
   try {
-    const { userID, userPASS } = req.body;
+    const { userID, password } = req.body;
     await database.connect();
     const collection = database.getCollection('MyDBExample', 'UserInformation');
-    await collection.insertOne({ userID, userPASS });
+    await collection.insertOne({ userID, password });
     console.log("User registered:", userID);
     res.redirect('/Login.html');
   } catch (error) {
@@ -83,10 +83,10 @@ app.post('/register', async function(req, res) {
 // Route to handle login requests:
 app.post('/login', async function(req, res) {
   try {
-    const { userID, userPASS } = req.body;
+    const { userID, password } = req.body;
     await database.connect();
     const collection = database.getCollection('MyDBExample', 'UserInformation');
-    const user = await collection.findOne({ userID, userPASS });
+    const user = await collection.findOne({ userID, password });
     req.session.userID = userID;
     if (user) {
       res.cookie(userID, Date.now(), { maxAge: 300000 });
