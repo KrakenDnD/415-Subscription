@@ -266,7 +266,11 @@ app.get('/subscribedtopics', async function(req, res) {
 
     await database.connect();
     const collection = database.getCollection('Project415', 'topics');
+    
+    // Find topics where the subscribedUsers array contains the current user's userID
     const subscribedTopics = await collection.find({ subscribedUsers: userID }).toArray();
+    
+    // Send the subscribed topics as a JSON response
     res.status(200).json(subscribedTopics);
   } catch (error) {
     console.error("Error getting subscribed topics:", error);
@@ -275,6 +279,7 @@ app.get('/subscribedtopics', async function(req, res) {
     await database.close();
   }
 });
+
 
 // Route to handle subscribing to a topic
 app.post('/subscribe', async function(req, res) {
