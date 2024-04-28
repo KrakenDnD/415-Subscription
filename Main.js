@@ -30,9 +30,6 @@ async function connectToDatabase() {
 }
 connectToDatabase();
 
-// Create an instance of the Observer
-const commentObserver = new CommentObserver();
-
 app.listen(port);
 console.log('Server started at http://localhost:' + port);
 
@@ -134,30 +131,35 @@ app.post('/login', async function(req, res) {
 app.post('/comments', async function(req, res) {
   try {
     const { topicID, commentContent } = req.body;
-
+   
     // Check if the topicID and commentContent are provided
     if (!topicID || !commentContent) {
       return res.status(400).send('Missing required fields');
     }
 
-    const userID = req.session.userID; // Add the userID from the session
-    const success = await commentController.addComment(topicID, commentContent, userID, database);
-    
-    if (success) {
-      // Notify observers (subscribers) about the new comment
-      commentObserver.notify({ topicID, commentContent, userID: req.session.userID });
-      
-      // Send a success response
-      res.status(201).send('Comment added successfully');
-    } else {
-      res.status(500).send('Error adding comment');
-    }
+    // Generate a unique comment ID
+    const commentID = new ObjectId();
+
+    // Add the comment to the database with unique comment ID
+    await database.connect();
+    const collection = database.getCollection('Project415', 'comments');
+    await collection.insertOne({
+      commentID,
+      topicID,
+      commentContent,
+      userID: req.session.userID, // Add the userID from the session
+      dateTime: new Date().toISOString()
+    });
+
+    // Send a success response
+    res.status(201).send('Comment added successfully');
   } catch (error) {
     console.error("Error adding comment:", error);
     res.status(500).send('Error adding comment');
+  } finally {
+    await database.close();
   }
 });
-
 
 // Route to handle retrieving comments for a specific topic
 app.get('/comments', async function(req, res) {
@@ -266,11 +268,7 @@ app.get('/subscribedtopics', async function(req, res) {
 
     await database.connect();
     const collection = database.getCollection('Project415', 'topics');
-    
-    // Find topics where the subscribedUsers array contains the current user's userID
     const subscribedTopics = await collection.find({ subscribedUsers: userID }).toArray();
-    
-    // Send the subscribed topics as a JSON response
     res.status(200).json(subscribedTopics);
   } catch (error) {
     console.error("Error getting subscribed topics:", error);
@@ -279,7 +277,6 @@ app.get('/subscribedtopics', async function(req, res) {
     await database.close();
   }
 });
-
 
 // Route to handle subscribing to a topic
 app.post('/subscribe', async function(req, res) {
@@ -352,4 +349,3 @@ app.get('/reportcookies', function(req, res) {
   }
   cookieReport += '<br><a href="/Welcome.html">Back to Welcome Page</a> <br><a href="/reportcookies">View Active Cookies</a> <br><a href="/clearcookies">Delete Active Cookies</a>';
   res.send(cookieReport); // Send all active cookies
-});
