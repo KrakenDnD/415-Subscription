@@ -68,7 +68,7 @@ app.post('/register', async function(req, res) {
   try {
     const { userID, userPASS } = req.body;
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'credentials');
+    const collection = database.getCollection('MyDBExample', 'UserInformation');
     await collection.insertOne({ userID, userPASS });
     console.log("User registered:", userID);
     res.redirect('/Login.html');
@@ -85,7 +85,7 @@ app.post('/login', async function(req, res) {
   try {
     const { userID, userPASS } = req.body;
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'credentials');
+    const collection = database.getCollection('MyDBExample', 'UserInformation');
     const user = await collection.findOne({ userID, userPASS });
     req.session.userID = userID;
     if (user) {
@@ -118,7 +118,7 @@ app.post('/comments', async function(req, res) {
 
     // Add the comment to the database with unique comment ID
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'comments');
+    const collection = database.getCollection('Project415', 'comments');
     await collection.insertOne({
       commentID,
       topicID,
@@ -149,7 +149,7 @@ app.get('/comments', async function(req, res) {
 
     // Retrieve comments for the specified topicID
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'comments');
+    const collection = database.getCollection('Project415', 'comments');
     const comments = await collection.find({ topicID }).toArray();
 
     // Construct the response HTML with comments, userID, and dateTime
@@ -178,7 +178,7 @@ app.get('/recentcomments', async function(req, res) {
     await database.connect();
    
     // Get the comments collection
-    const collection = database.getCollection('crlmdb', 'comments');
+    const collection = database.getCollection('Project415', 'comments');
    
     // Find the two most recent comments
     const comments = await collection.find()
@@ -203,7 +203,7 @@ app.post('/topics', async function(req, res) {
     const { title } = req.body;
     const userID = req.session.userID;
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'topics');
+    const collection = database.getCollection('Project415', 'topics');
     await collection.insertOne({
       title,
       createdBy: req.session.userID,
@@ -222,7 +222,7 @@ app.post('/topics', async function(req, res) {
 app.get('/topics', async function(req, res) {
   try {
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'topics');
+    const collection = database.getCollection('Project415', 'topics');
     const topics = await collection.find({}).toArray();
     res.status(200).json(topics);
   } catch (error) {
@@ -243,7 +243,7 @@ app.get('/subscribedtopics', async function(req, res) {
     }
 
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'topics');
+    const collection = database.getCollection('Project415', 'topics');
     const subscribedTopics = await collection.find({ subscribedUsers: userID }).toArray();
     res.status(200).json(subscribedTopics);
   } catch (error) {
@@ -261,7 +261,7 @@ app.post('/subscribe', async function(req, res) {
     const userID = req.session.userID;
 
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'topics');
+    const collection = database.getCollection('Project415', 'topics');
     const result = await collection.updateOne(
       { _id: new ObjectId(topicID) }, // Use ObjectId directly
       { $addToSet: { subscribedUsers: userID } }
@@ -287,7 +287,7 @@ app.post('/unsubscribe', async function(req, res) {
     const userID = req.session.userID;
 
     await database.connect();
-    const collection = database.getCollection('crlmdb', 'topics');
+    const collection = database.getCollection('Project415', 'topics');
     const result = await collection.updateOne(
       { _id: new ObjectId(topicID) }, // Uses ObjectId directly
       { $pull: { subscribedUsers: userID } } // Uses $pull to remove user from array

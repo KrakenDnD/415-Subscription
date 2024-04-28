@@ -40,7 +40,7 @@ class Database {
   async updateCollectionSchema() {
     try {
       await this.connect();
-      const collection = this.getCollection('crlmdb', 'topics');
+      const collection = this.getCollection('Project415', 'topics');
       await collection.updateMany({}, { $set: { subscribedUsers: [] } });
       console.log('MongoDB collection schema updated successfully');
     } catch (error) {
