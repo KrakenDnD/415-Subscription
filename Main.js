@@ -4,6 +4,10 @@ const cookieParser = require('cookie-parser');
 const ObjectId = require('mongodb').ObjectId;
 const session = require('express-session');
 const Database = require('./dataContext');
+const CommentObserver = require('./Observer');
+const CommentModel = require('./CommentModel');
+const CommentView = require('./CommentView');
+const CommentController = require('./CommentController');
 
 
 const app = express();
