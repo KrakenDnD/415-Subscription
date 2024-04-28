@@ -83,18 +83,6 @@
           topicElement.appendChild(buttonContainer);
 
           topicsContainer.appendChild(topicElement);
-
-          // Adds a button to unsubscribe to the topic
-          var unsubscribeButton = document.createElement("button");
-          unsubscribeButton.textContent = "Unsubscribe";
-          unsubscribeButton.onclick = function() {
-            unsubscribeToTopic(topic._id);
-          };
-          buttonContainer.appendChild(unsubscribeButton);
-
-          topicElement.appendChild(buttonContainer);
-
-          topicsContainer.appendChild(topicElement);
         });
 
         var button = document.getElementById("showTopicsButton");
