@@ -144,6 +144,10 @@ app.post('/comments', async function(req, res) {
     const success = await commentController.addComment(topicID, commentContent, userID, database);
     
     if (success) {
+      // Notify observers (subscribers) about the new comment
+      commentObserver.notify({ topicID, commentContent, userID: req.session.userID });
+      
+      // Send a success response
       res.status(201).send('Comment added successfully');
     } else {
       res.status(500).send('Error adding comment');
@@ -154,18 +158,7 @@ app.post('/comments', async function(req, res) {
   }
 });
 
-// Notify observers (subscribers) about the new comment
-    commentObserver.notify({ topicID, commentContent, userID: req.session.userID });
-    
-// Send a success response
-try {
-  res.status(201).send('Comment added successfully');
-} catch (error) {
-  console.error("Error adding comment:", error);
-  res.status(500).send('Error adding comment');
-} finally {
-  database.close(); // Remove the "await" keyword from here
-}
+});
 
 // Route to handle retrieving comments for a specific topic
 app.get('/comments', async function(req, res) {
