@@ -4,6 +4,7 @@ const { MongoClient } = require("mongodb");
 // MongoDB connection URI
 const uri = 'mongodb+srv://User:golions!@cluster0.z11f996.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
+// Singleton pattern implementation: ensures only one instance of Database class
 class Database {
   constructor() {
     if (!Database.instance) {
