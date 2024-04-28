@@ -84,7 +84,7 @@
 
           topicsContainer.appendChild(topicElement);
 
-          // Adds a button to subscribe to the topic
+          // Adds a button to unsubscribe to the topic
           var unsubscribeButton = document.createElement("button");
           unsubscribeButton.textContent = "Unsubscribe";
           unsubscribeButton.onclick = function() {
@@ -126,7 +126,7 @@
     };
     xhr.send(JSON.stringify({ topicID: topicID }));
   }
-  // Function to subscribe to a topic
+  // Function to unsubscribe to a topic
   function unsubscribeToTopic(topicID) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/unsubscribe", true);
