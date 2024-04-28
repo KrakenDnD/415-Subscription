@@ -165,7 +165,7 @@ try {
   res.status(500).send('Error adding comment');
 } finally {
   await database.close();
-
+}
 
 // Route to handle retrieving comments for a specific topic
 app.get('/comments', async function(req, res) {
