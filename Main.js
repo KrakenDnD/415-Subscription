@@ -164,7 +164,7 @@ try {
   console.error("Error adding comment:", error);
   res.status(500).send('Error adding comment');
 } finally {
-  await database.close();
+  database.close(); // Remove the "await" keyword from here
 }
 
 // Route to handle retrieving comments for a specific topic
