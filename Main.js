@@ -158,7 +158,6 @@ app.post('/comments', async function(req, res) {
   }
 });
 
-});
 
 // Route to handle retrieving comments for a specific topic
 app.get('/comments', async function(req, res) {
