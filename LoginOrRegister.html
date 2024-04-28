@@ -1,15 +1,50 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
   <title>Login or Register</title>
+  <style>
+    body {
+      background-image: url('https://globetrender.com/wp-content/uploads/2021/02/AdobeStock_239804375-scaled-e1614519735981-2048x1161.jpeg');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .content {
+      text-align: center;
+    }
+    h1 {
+      font-size: 48px;
+      font-family: cursive;
+      font-weight: bold;
+    }
+    p {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    button {
+      padding: 15px 30px;
+      margin: 20px;
+      font-size: 18px;
+      background-color: #add8e6;
+      border: 2px solid #4682b4;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #87ceeb;
+    }
+  </style>
 </head>
-<center><body>
-  <h1>Welcome!</h1>
-  <p>Please choose an option:</p>
-  <button onclick="window.location.href='/Login.html'">Login</button>
-  <button onclick="window.location.href='/Register.html'">Register</button>
- </center>
+<body>
+  <div class="content">
+    <h1>Welcome to Our Message Center</h1>
+    <p>Please choose an option:</p>
+    <button onclick="window.location.href='/Login.html'">Login</button>
+    <button onclick="window.location.href='/Register.html'">Register</button>
+  </div>
 </body>
 </html>
