@@ -16,12 +16,6 @@ const port = 3000;
 const uri = 'mongodb+srv://User:golions!@cluster0.z11f996.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const client = new MongoClient(uri);
 
-// Create instances
-const database = new Database(uri);
-const commentObserver = new CommentObserver();
-const commentModel = new CommentModel();
-const commentController = new CommentController(commentModel, commentObserver);
-
 // Initialize the Database instance
 const database = new Database(uri);
 // Connect to MongoDB
