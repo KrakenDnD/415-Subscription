@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="utf-8">
   <title>Comments</title>
@@ -12,10 +12,21 @@
       height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
+      background-image: url('https://globetrender.com/wp-content/uploads/2021/02/AdobeStock_239804375-scaled-e1614519735981-2048x1161.jpeg');
+      background-size: cover; 
+      background-position: center; 
     }
 
     #container {
       text-align: center;
+    }
+
+    h1 {
+      font-family: cursive; 
+    }
+
+    h2 {
+      margin-top: 30px; 
     }
 
     #commentsContainer {
@@ -26,19 +37,21 @@
       width: 100%;
       box-sizing: border-box;
       overflow-y: hidden;
-
+      background-color: lightblue; /* White background color */
     }
 
     .comment {
       border-bottom: 1px solid #ccc;
       padding: 10px 0;
       margin-bottom: 10px;
+      text-align: left;
     }
   </style>
 </head>
+
 <body>
   <div id="container">
-    <h1 id="titleHeader"></h1>
+    <h1 id="titleHeader">Title:</h1>
     <h2>Add a Comment</h2>
     <form id="commentForm">
       <input type="hidden" id="topicID" name="topicID" value="">
@@ -47,11 +60,20 @@
     </form>
     <center>
       <div id="commentsContainer">
-        <table><td></td></table>
+        <div class="comment">
+          <div class="info">User: Username</div>
+          <div class="info">Topic: Your Topic</div>
+          <div class="info">Date: YYYY-MM-DD</div>
+          <div class="content">Comment: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+        </div>
       </div>
-      <br><a href="/Welcome.html">Back to Welcome Page</a>
+      <br><a href="/Welcome.html">Topic Page</a>
     </center>
   </div>
+</body>
+
+</html>
+
 
   <script>
     // Gets the title from the URL query parameters
