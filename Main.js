@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const ObjectId = require('mongodb').ObjectId;
 const session = require('express-session');
 const Database = require('./dataContext');
+const CommentObserver = require('./Observer');
 
 const app = express();
 const port = 3000;
@@ -25,6 +26,9 @@ async function connectToDatabase() {
   }
 }
 connectToDatabase();
+
+// Create an instance of the Observer
+const commentObserver = new CommentObserver();
 
 app.listen(port);
 console.log('Server started at http://localhost:' + port);
@@ -147,7 +151,10 @@ app.post('/comments', async function(req, res) {
       dateTime: new Date().toISOString()
     });
 
-    // Send a success response
+// Notify observers (subscribers) about the new comment
+    commentObserver.notify({ topicID, commentContent, userID: req.session.userID });
+    
+// Send a success response
     res.status(201).send('Comment added successfully');
   } catch (error) {
     console.error("Error adding comment:", error);
