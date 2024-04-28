@@ -355,4 +355,4 @@ app.get('/reportcookies', function(req, res) {
   }
   cookieReport += '<br><a href="/Welcome.html">Back to Welcome Page</a> <br><a href="/reportcookies">View Active Cookies</a> <br><a href="/clearcookies">Delete Active Cookies</a>';
   res.send(cookieReport); // Send all active cookies
-});}
+});
