@@ -159,13 +159,13 @@ app.post('/comments', async function(req, res) {
     
 // Send a success response
     res.status(201).send('Comment added successfully');
-  } catch (error) {
+   catch (error) {
     console.error("Error adding comment:", error);
     res.status(500).send('Error adding comment');
   } finally {
     await database.close();
   }
-});
+
 
 // Route to handle retrieving comments for a specific topic
 app.get('/comments', async function(req, res) {
