@@ -5,6 +5,9 @@ const ObjectId = require('mongodb').ObjectId;
 const session = require('express-session');
 const Database = require('./dataContext');
 const CommentObserver = require('./Observer');
+const CommentModel = require('./models/CommentModel');
+const CommentView = require('./views/CommentView');
+const CommentController = require('./controllers/CommentController');
 
 const app = express();
 const port = 3000;
@@ -12,6 +15,12 @@ const port = 3000;
 // MongoDB connection
 const uri = 'mongodb+srv://User:golions!@cluster0.z11f996.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const client = new MongoClient(uri);
+
+// Create instances
+const database = new Database(uri);
+const commentObserver = new CommentObserver();
+const commentModel = new CommentModel();
+const commentController = new CommentController(commentModel, commentObserver);
 
 // Initialize the Database instance
 const database = new Database(uri);
@@ -131,25 +140,25 @@ app.post('/login', async function(req, res) {
 app.post('/comments', async function(req, res) {
   try {
     const { topicID, commentContent } = req.body;
-   
+
     // Check if the topicID and commentContent are provided
     if (!topicID || !commentContent) {
       return res.status(400).send('Missing required fields');
     }
 
-    // Generate a unique comment ID
-    const commentID = new ObjectId();
-
-    // Add the comment to the database with unique comment ID
-    await database.connect();
-    const collection = database.getCollection('Project415', 'comments');
-    await collection.insertOne({
-      commentID,
-      topicID,
-      commentContent,
-      userID: req.session.userID, // Add the userID from the session
-      dateTime: new Date().toISOString()
-    });
+    const userID = req.session.userID; // Add the userID from the session
+    const success = await commentController.addComment(topicID, commentContent, userID, database);
+    
+    if (success) {
+      res.status(201).send('Comment added successfully');
+    } else {
+      res.status(500).send('Error adding comment');
+    }
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).send('Error adding comment');
+  }
+});
 
 // Notify observers (subscribers) about the new comment
     commentObserver.notify({ topicID, commentContent, userID: req.session.userID });
