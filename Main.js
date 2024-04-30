@@ -112,6 +112,7 @@ app.post('/login', async function(req, res) {
     await database.connect();
     const collection = database.getCollection('Project415', 'User');
     const user = await collection.findOne({ userID, password });
+    console.log("User Info: ", userID, " | ", password);
     req.session.userID = userID;
     if (user) {
       res.cookie(userID, Date.now(), { maxAge: 300000 });
