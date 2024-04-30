@@ -96,6 +96,7 @@ app.post('/register', async function(req, res) {
     const collection = database.getCollection('Project415', 'User');
     await collection.insertOne({ userID, password });
     console.log("User registered: ", userID, " | ", password);
+    console.debug("ID: ", userID, " | ", password);
     res.redirect('/Login.html');
   } catch (error) {
     console.error("Error during registration:", error);
