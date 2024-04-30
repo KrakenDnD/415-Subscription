@@ -91,7 +91,7 @@ app.get('/Welcome.html', function(req, res) {
 // Route to handle registration:
 app.post('/register', async function(req, res) {
   try {
-    const { _, password, userID } = req.body;
+    const { userID, password } = req.body;
     await database.connect();
     const collection = database.getCollection('Project415', 'User');
     await collection.insertOne({ userID, password });
