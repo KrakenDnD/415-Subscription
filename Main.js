@@ -130,7 +130,7 @@ app.post('/login', async function(req, res) {
   }
 });
 
-// Route to handle adding comments
+// T4: Route to handle adding comments
 app.post('/comments', async function(req, res) {
   try {
     const { topicID, commentContent } = req.body;
@@ -164,7 +164,7 @@ app.post('/comments', async function(req, res) {
   }
 });
 
-// Route to handle retrieving comments for a specific topic
+// T1: Route to handle retrieving comments for a specific topic
 app.get('/comments', async function(req, res) {
   try {
     const { topicID } = req.query;
@@ -198,6 +198,7 @@ app.get('/comments', async function(req, res) {
   }
 });
 
+//T2.1: Upon login, a user should see the 2 most recent messages
 // Route to handle retrieving the two most recent comments from the database
 app.get('/recentcomments', async function(req, res) {
   try {
@@ -224,7 +225,7 @@ app.get('/recentcomments', async function(req, res) {
   }
 });
 
-// Route to create a new topic
+// T3: Route to create a new topic
 app.post('/topics', async function(req, res) {
   try {
     const { title } = req.body;
@@ -260,7 +261,7 @@ app.get('/topics', async function(req, res) {
   }
 });
 
-// Route to handle retrieving subscribed topics for the current user
+// T2.2: Route to handle retrieving subscribed topics for the current user
 app.get('/subscribedtopics', async function(req, res) {
   try {
     const userID = req.session.userID;
