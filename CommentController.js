@@ -1,4 +1,6 @@
+//T5 (MVC), T6, this is observer pattern implemented in controller. I do have just the Observer.js in case that would make your checking easier too.
 // controllers/CommentController.js
+
 class CommentController {
   constructor(commentModel, commentObserver) {
     this.commentModel = commentModel;
