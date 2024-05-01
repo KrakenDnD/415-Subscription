@@ -1,3 +1,4 @@
+//T5
 // views/CommentView.js
 class CommentView {
   static render(comment) {
